@@ -1,4 +1,4 @@
-# 🐔 Corrida Gravitacional - Walkthrough
+# 🐔 Corrida Gravitacional
 
 Bem-vindo ao **Corrida Gravitacional**! Este projeto é um jogo 2D desenvolvido com foco em performance e experiência do usuário (UX), idealizado para testes de QA e diversão casual.
 
