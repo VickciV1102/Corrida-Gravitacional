@@ -67,6 +67,8 @@ let p1;
 let p2;
 let bg;
 let obstacles = [];
+let obsTimer1 = 0;
+let obsTimer2 = 0;
 
 // Input Handling
 window.addEventListener('keydown', (e) => {
@@ -510,6 +512,8 @@ function startGame() {
     obstacles = [];
     distance = 0;
     frames = 0;
+    obsTimer1 = 0;
+    obsTimer2 = 30; // offset lane 2 by default
     GAME_SPEED = BASE_SPEED;
 }
 
@@ -543,21 +547,20 @@ function render() {
         p2.update();
         p2.draw();
         
-        // Spawn obstacles
-        if (frames % (Math.max(40, 100 - Math.floor(GAME_SPEED * 2))) === 0) {
-             let newObs1 = new Obstacle(1);
-             obstacles.push(newObs1);
-             
-             // Avoid impossible obstacles on lane 2 directly below an obstacle on lane 1
-             if (Math.random() > 0.3) {
-                 let newObs2 = new Obstacle(2);
-                 // Check if both are saws to avoid impossible saw patterns simultaneously
-                 if (!(newObs1.type === 'saw' && newObs2.type === 'saw')) {
-                     obstacles.push(newObs2);
-                 }
-             }
-        } else if (frames % 45 === 0 && Math.random() > 0.6) {
-             obstacles.push(new Obstacle(2));
+        // Spawn obstacles with independent lane timers
+        let spawnInterval = Math.max(45, 100 - Math.floor(GAME_SPEED * 2));
+        
+        obsTimer1--;
+        if (obsTimer1 <= 0) {
+            obstacles.push(new Obstacle(1));
+            // Reset with minimum interval + some randomness
+            obsTimer1 = spawnInterval + Math.floor(Math.random() * 20);
+        }
+        
+        obsTimer2--;
+        if (obsTimer2 <= 0) {
+            obstacles.push(new Obstacle(2));
+            obsTimer2 = spawnInterval + Math.floor(Math.random() * 20);
         }
         
         for (let i = obstacles.length - 1; i >= 0; i--) {
